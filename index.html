@@ -2,74 +2,58 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ランダム名言</title>
+  <title>ランダムなひとこと</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      font-family: sans-serif;
       text-align: center;
-      padding: 48px 16px;
-      line-height: 1.6;
+      margin: 50px;
     }
-    .word {
-      font-size: 22px;
-      font-weight: 500;
-      margin: 24px auto 0;
-      max-width: 30ch;
-    }
-    .author {
-      font-size: 16px;
-      color: #555;
-      margin-top: 12px;
-    }
-    .portrait {
-      margin-top: 24px;
-      max-width: 180px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .note {
-      font-size: 12px;
-      color: #666;
-      margin-top: 24px;
+    #authorImage {
+      max-width: 200px;
+      margin-top: 20px;
+      border-radius: 10px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div id="word" class="word">読み込み中...</div>
-  <div id="author" class="author"></div>
-  <img id="portrait" class="portrait" style="display:none;" alt="著者の肖像">
-  <div class="note">（ページを開くたびにランダム表示）</div>
+  <h1 id="quote"></h1>
+  <p id="author"></p>
+  <img id="authorImage" alt="著者の写真">
 
   <script>
-    // 著者名と画像の対応表
+    // 著者と画像の対応表
     const authorImages = {
       "ルートヴィヒ・フォン・ミーゼス": "images/mises.png",
       "アダム・スミス": "images/smith.jpg",
       "フリードリヒ・ハイエク": "images/hayek.jpg"
-      // 必要に応じて追加
     };
 
-    fetch("words.json")
-      .then(response => response.json())
-      .then(words => {
-        const pick = words[Math.floor(Math.random() * words.length)];
-        document.getElementById("word").textContent = pick.quote;
-        document.getElementById("author").textContent = pick.author ? `― ${pick.author}` : "";
+    async function loadQuote() {
+      try {
+        const response = await fetch("words.json");
+        const words = await response.json();
+        const random = words[Math.floor(Math.random() * words.length)];
 
-        const imgPath = authorImages[pick.author];
-        const img = document.getElementById("portrait");
-        if (imgPath) {
-          img.src = imgPath;
-          img.style.display = "block";
+        document.getElementById("quote").textContent = random.quote;
+        document.getElementById("author").textContent = random.author;
+
+        const imgSrc = authorImages[random.author];
+        const imgElem = document.getElementById("authorImage");
+
+        if (imgSrc) {
+          imgElem.src = imgSrc;
+          imgElem.style.display = "block";
         } else {
-          img.style.display = "none";
+          imgElem.style.display = "none";
         }
-      })
-      .catch(err => {
-        document.getElementById("word").textContent = "読み込みエラー";
-        console.error(err);
-      });
+      } catch (error) {
+        console.error("JSONの読み込みに失敗しました:", error);
+      }
+    }
+
+    window.onload = loadQuote;
   </script>
 </body>
 </html>
