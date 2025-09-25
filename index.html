@@ -18,18 +18,18 @@
       margin-bottom: 15px;
     }
 
-    #author {
-      font-size: 1.1rem;
-      margin-bottom: 15px;
-      color: #555;
-    }
-
     #authorImage {
       max-width: 100%;
       height: auto;
-      margin-top: 10px;
+      margin: 10px 0;
       border-radius: 10px;
       display: none;
+    }
+
+    #author {
+      font-size: 1.1rem;
+      margin-top: 10px;
+      color: #555;
     }
 
     @media (min-width: 768px) {
@@ -47,8 +47,8 @@
 </head>
 <body>
   <h1 id="quote"></h1>
-  <p id="author"></p>
   <img id="authorImage" alt="著者の写真">
+  <p id="author"></p>
 
   <script>
     // 著者と画像の対応表
