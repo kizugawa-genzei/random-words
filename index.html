@@ -12,7 +12,7 @@
       line-height: 1.6;
     }
     .word {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 500;
       margin: 24px auto 0;
       max-width: 30ch;
@@ -21,6 +21,12 @@
       font-size: 16px;
       color: #555;
       margin-top: 12px;
+    }
+    .portrait {
+      margin-top: 24px;
+      max-width: 180px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
     .note {
       font-size: 12px;
@@ -32,15 +38,33 @@
 <body>
   <div id="word" class="word">読み込み中...</div>
   <div id="author" class="author"></div>
+  <img id="portrait" class="portrait" style="display:none;" alt="著者の肖像">
   <div class="note">（ページを開くたびにランダム表示）</div>
 
   <script>
+    // 著者名と画像の対応表
+    const authorImages = {
+      "ルートヴィヒ・フォン・ミーゼス": "images/mises.png",
+      "アダム・スミス": "images/smith.jpg",
+      "フリードリヒ・ハイエク": "images/hayek.jpg"
+      // 必要に応じて追加
+    };
+
     fetch("words.json")
       .then(response => response.json())
       .then(words => {
         const pick = words[Math.floor(Math.random() * words.length)];
         document.getElementById("word").textContent = pick.quote;
         document.getElementById("author").textContent = pick.author ? `― ${pick.author}` : "";
+
+        const imgPath = authorImages[pick.author];
+        const img = document.getElementById("portrait");
+        if (imgPath) {
+          img.src = imgPath;
+          img.style.display = "block";
+        } else {
+          img.style.display = "none";
+        }
       })
       .catch(err => {
         document.getElementById("word").textContent = "読み込みエラー";
